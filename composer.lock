@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "fcab33d79613db979d8e27d433168e40",
+    "content-hash": "612c07e7e5e54b35d37ab654672b7a80",
     "packages": [
         {
             "name": "easycorp/easy-log-handler",
