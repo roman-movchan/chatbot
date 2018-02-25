@@ -51,6 +51,10 @@
         ],
         "post-update-cmd": [
             "@auto-scripts"
+        ],
+        "warmup": [
+            "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache"
         ]
     },
     "conflict": {
@@ -60,11 +64,6 @@
         "symfony": {
             "id": "01C71HA303YCFZ5ND7WMAC18RD",
             "allow-contrib": false
-        },
-        "heroku": {
-            "compile": [
-                "chmod -R 777 var/"
-            ]
         }
     }
 }

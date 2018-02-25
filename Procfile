@@ -1,1 +1,1 @@
-web: vendor/bin/heroku-php-apache2 public
+web: composer warmup && vendor/heroku-php-apache2 public
