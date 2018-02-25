@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use pimax\UserProfile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -166,8 +167,9 @@ class TestController extends Controller
 
                         // Other message received
                         default:
+                            /** @var UserProfile $user */
                             $user = $bot->userProfile($message['sender']['id']);
-                            $bot->send(new Message($message['sender']['id'], 'Sorry. I don’t understand you.'. $user['firstname']));
+                            $bot->send(new Message($message['sender']['id'], 'Sorry. I don’t understand you.'. $user->getFirstName()));
                     }
 
                 }
