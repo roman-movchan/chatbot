@@ -44,9 +44,9 @@ class TestController extends Controller
         $bot = new FbBotApp($token);
 
         if ($request->request->has('hub_mode')
-            && $request->request->has('hub_mode') === 'subscribe'
+            && $request->request->get('hub_mode') === 'subscribe'
             && $request->request->get('hub_verify_token') == $verify_token) {
-            return new Response($request->request->get('hub_challenge'));
+            return new Response((string)$request->request->get('hub_challenge'));
         }
 
         $data = json_decode(file_get_contents("php://input"), true);

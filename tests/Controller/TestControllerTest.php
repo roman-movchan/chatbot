@@ -6,31 +6,58 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class TestControllerTest extends WebTestCase
 {
-    public function testEmptyLead()
+    public function testControllerSuccess()
     {
         $client = static::createClient();
 
-        $messge = [
-            'object' => 'page',
+        $message = (object) [
+            'object' => "page",
             'entry' => [
-                'id' => 376882919389395,
-                'time' => 1458692752478,
-                'messaging' => [
-                    'sender' => []
-    ]
+                (object) [
+                    'id' => 376882919389395,
+                    'time' => 1458692752478,
+                    'messaging' => [
+                        (object) [
+                            'sender' => (object)[
+                                'id' => 111111
+                            ],
+                            'recipient' => (object) [
+                                'id' => 222222
+                            ]
+                        ]
+                    ]
+                ]
             ]
         ];
+
         $client->request('POST',
             $client->getContainer()->get('router')->generate('fbbot'),
             [],
             [],
             ['CONTENT_TYPE' => 'application/json'],
-            '{ "partnerId":"1",  "firstName":"test",  "lastName":"test",  "middleName":"test",  "phone":"+380969182351",  "email":"test@gmail.com",  "amount":"123123",  "employment":"official",  "city":"Енакиево",  "aim":"untilSalary",  "birthDate":"01-04-1990",  "channel": "test",  "productTypes": {          "cardCredit":[6,195,210,117,103,209,211]  },  "call_center": "true"}'
+            json_encode($message)
+        );
+
+        json_decode($client->getResponse()->getContent());
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+    }
+
+    public function testControllerVerify()
+    {
+        $client = static::createClient();
+
+        $client->request('POST',
+            $client->getContainer()->get('router')->generate('fbbot'),
+            [
+                'hub_mode' => 'subscribe',
+                'hub_verify_token' => 'token',
+                'hub_challenge' => true
+            ]
         );
 
         $result = json_decode($client->getResponse()->getContent());
-        $this->assertEquals(400, $client->getResponse()->getStatusCode());
-        $this->assertEquals('{"result":"error","message":"Need phone or email","errors":[{"field":"phone","message":"need phone or email"},{"field":"email","message":"Need phone or email"}]}',
-            $client->getResponse()->getContent());
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertEquals(1, $result);
     }
+
 }
