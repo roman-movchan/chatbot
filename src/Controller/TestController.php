@@ -20,13 +20,17 @@ class TestController extends Controller
 
     /**
      * @Route("/fbbot", name="fbbot")
+     *
      * @param Request $request
+     * @return  Response
      */
-    public function fbbotAction(Request $request)
+    public function fbbotAction(Request $request) : Response
     {
         $verify_token = "token"; // Verify token
         if (!empty($_REQUEST['hub_mode']) && $_REQUEST['hub_mode'] == 'subscribe' && $_REQUEST['hub_verify_token'] == $verify_token) {
-            echo $_REQUEST['hub_challenge'];
+            return new Response($_REQUEST['hub_challenge']);
+        } else {
+            return new Response();
         }
     }
 }
