@@ -3,6 +3,6 @@
 #    defaults: { _controller: 'App\Controller\DefaultController::index' }
 
 
-index:
-    path: /
-    defaults: {_controller: 'App\Controller\TestController::test'}
+app_annotations:
+    resource: '../src/Controller/'
+    type:     annotation
