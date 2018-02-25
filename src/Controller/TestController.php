@@ -50,12 +50,12 @@ class TestController extends Controller
             {
                 foreach ($data['entry'][0]['messaging'] as $message)
                 {
-                    $bot->send(new Message($message['sender']['id'], "Hi there!"));
+                    //$bot->send(new Message($message['sender']['id'], "Hi there!"));
                 }
             }
         }
 
-        return new Response();
+        //return new Response();
 
     }
 }
