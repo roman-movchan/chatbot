@@ -60,7 +60,6 @@ class TestController extends Controller
                     }
 
                     $command = "";
-// Получено сообщение от пользователя, записываем как команду
                     if (!empty($message['message'])) {
                         $command = $message['message']['text'];
                         // ИЛИ Зафиксирован переход по кнопке, записываем как команду
@@ -167,7 +166,8 @@ class TestController extends Controller
 
                         // Other message received
                         default:
-                            $bot->send(new Message($message['sender']['id'], 'Sorry. I don’t understand you.'));
+                            $user = $bot->userProfile($message['sender']['id']);
+                            $bot->send(new Message($message['sender']['id'], 'Sorry. I don’t understand you.'. $user['firstname']));
                     }
 
                 }
