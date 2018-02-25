@@ -51,9 +51,6 @@
         ],
         "post-update-cmd": [
             "@auto-scripts"
-        ],
-        "compile": [
-            "chmod -R 777 var/"
         ]
     },
     "conflict": {
@@ -63,6 +60,12 @@
         "symfony": {
             "id": "01C71HA303YCFZ5ND7WMAC18RD",
             "allow-contrib": false
+        },
+        "heroku": {
+            "compile": [
+                "chmod -R 777 var/"
+            ]
         }
+    }
     }
 }
