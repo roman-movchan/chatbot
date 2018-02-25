@@ -51,6 +51,9 @@
         ],
         "post-update-cmd": [
             "@auto-scripts"
+        ],
+        "compile": [
+            "chmod -R 777 var/"
         ]
     },
     "conflict": {
