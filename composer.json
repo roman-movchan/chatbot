@@ -4,6 +4,7 @@
     "require": {
         "php": "^7.0.8",
         "ext-iconv": "*",
+        "pimax/fb-messenger-php": "^1.0",
         "sensio/framework-extra-bundle": "^5.1",
         "symfony/console": "^3.4",
         "symfony/debug": "^3.4",

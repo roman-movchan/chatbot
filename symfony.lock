@@ -35,6 +35,9 @@
     "monolog/monolog": {
         "version": "1.23.0"
     },
+    "pimax/fb-messenger-php": {
+        "version": "v1.0"
+    },
     "psr/cache": {
         "version": "1.0.1"
     },
