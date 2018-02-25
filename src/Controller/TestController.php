@@ -54,10 +54,10 @@ class TestController extends Controller
                     if (!empty($message['delivery'])) {
                         continue;
                     }
-                    // skip the echo of my own messages
-                    if (($message['message']['is_echo'] == "true")) {
-                        continue;
-                    }
+//                    // skip the echo of my own messages
+//                    if (($message['message']['is_echo'] == "true")) {
+//                        continue;
+//                    }
 
                     $bot->send(new Message($message['sender']['id'], 'Halo'));
 
