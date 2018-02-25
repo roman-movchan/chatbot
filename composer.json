@@ -53,8 +53,7 @@
             "@auto-scripts"
         ],
         "warmup": [
-            "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache"
+            "chmod -R 777 var"
         ]
     },
     "conflict": {
