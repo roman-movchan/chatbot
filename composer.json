@@ -4,14 +4,23 @@
     "require": {
         "php": "^7.0.8",
         "ext-iconv": "*",
+        "pimax/fb-messenger-php": "^1.0",
+        "sensio/framework-extra-bundle": "^5.1",
         "symfony/console": "^3.4",
+        "symfony/debug": "^3.4",
+        "symfony/debug-bundle": "^3.4",
+        "symfony/debug-pack": "^1.0",
         "symfony/flex": "^1.0",
         "symfony/framework-bundle": "^3.4",
         "symfony/lts": "^3",
+        "symfony/twig-bundle": "^3.4",
+        "symfony/web-server-bundle": "^3.4",
         "symfony/yaml": "^3.4"
     },
     "require-dev": {
-        "symfony/dotenv": "^3.4"
+        "symfony/browser-kit": "^3.4",
+        "symfony/dotenv": "^3.4",
+        "symfony/phpunit-bridge": "^3.4"
     },
     "config": {
         "preferred-install": {
