@@ -45,25 +45,27 @@ class TestController extends Controller
             return new Response($_REQUEST['hub_challenge']);
         } else {
 
-            $data = json_decode(file_get_contents("php://input"), true);
-            if (!empty($data['entry'][0]['messaging']))
-            {
-                foreach ($data['entry'][0]['messaging'] as $message)
-                {
-                    // Пропускаем обработку отметок о доставке сообщения
+            $data = json_decode(file_get_contents("php://input"), true, 512, JSON_BIGINT_AS_STRING);
+            if (!empty($data['entry'][0]['messaging'])) {
+                foreach ($data['entry'][0]['messaging'] as $message) {
+                    // Skipping delivery messages
                     if (!empty($message['delivery'])) {
                         continue;
                     }
-
-                    $command = "";
-// Получено сообщение от пользователя, записываем как команду
-                    if (!empty($message['message'])) {
-                        $command = $message['message']['text'];
-                        // ИЛИ Зафиксирован переход по кнопке, записываем как команду
-                    } else if (!empty($message['postback'])) {
-                        $command = $message['postback']['payload'];
+                    // skip the echo of my own messages
+                    if (($message['message']['is_echo'] == "true")) {
+                        continue;
                     }
-
+                    $command = "";
+                    // When bot receive message from user
+                    if (!empty($message['message'])) {
+                        $command = trim($message['message']['text']);
+                        // When bot receive button click from user
+                    } else if (!empty($message['postback'])) {
+                        $text = "Postback received: ".trim($message['postback']['payload']);
+                        $bot->send(new Message($message['sender']['id'], $text));
+                        continue;
+                    }
 // Обрабатываем команду
                     switch ($command) {
 
@@ -169,7 +171,7 @@ class TestController extends Controller
             }
         }
 
-        //return new Response();
+        return new Response();
 
     }
 }
