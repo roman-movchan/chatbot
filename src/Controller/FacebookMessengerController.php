@@ -18,16 +18,8 @@ use pimax\Messages\Address;
 use pimax\Messages\Summary;
 use pimax\Messages\Adjustment;
 
-class TestController extends Controller
+class FacebookMessengerController extends Controller
 {
-
-    /**
-     * @Route("/", name="homepage")
-     */
-    public function test()
-    {
-        return $this->render('test/index.html.twig');
-    }
 
     /**
      * @Route("/fbbot", name="fbbot")
