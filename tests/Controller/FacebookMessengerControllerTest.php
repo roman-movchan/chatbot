@@ -4,7 +4,7 @@ namespace App\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class TestControllerTest extends WebTestCase
+class FacebookMessengerControllerTest extends WebTestCase
 {
     public function testControllerSuccess()
     {
