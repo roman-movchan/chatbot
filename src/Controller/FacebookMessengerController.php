@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\FbMessengerMessage;
 use App\Entity\FbMessengerUser;
 use pimax\UserProfile;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -81,6 +82,14 @@ class FacebookMessengerController extends Controller
 
                     $em->persist($senderUser);
                 }
+
+                $msg = new FbMessengerMessage();
+                $msg->setType('text');
+                $msg->setSenderId($message['sender']['id']);
+                $msg->setRecipientId($message['recipient']['id']);
+                $msg->setText($message['message']['text']);
+
+                $em->persist($msg);
 
                 switch ($command) {
 
