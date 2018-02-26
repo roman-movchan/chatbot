@@ -50,9 +50,9 @@ class FacebookMessengerControllerTest extends WebTestCase
         $client->request('GET',
             $client->getContainer()->get('router')->generate('fbbot'),
             [
-                'hub.mode' => 'subscribe',
-                'hub.verify_token' => 'token',
-                'hub.challenge' => 1494994378
+                'hub_mode' => 'subscribe',
+                'hub_verify_token' => 'token',
+                'hub_challenge' => 1494994378
             ]
         );
 
