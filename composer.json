@@ -57,6 +57,9 @@
             "@auto-scripts"
         ]
     },
+    "compile": [
+        "bin/console doctrine:schema:update --force"
+    ],
     "conflict": {
         "symfony/symfony": "*"
     },
