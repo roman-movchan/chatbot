@@ -44,7 +44,7 @@ class FacebookMessengerControllerTest extends WebTestCase
 
     public function testControllerVerify()
     {
-        //fbbot?hub.mode=subscribe&hub.challenge=382059564&hub.verify_token=token
+        //fbbot?hub.mode=subscribe&hub.challenge=1494994378&hub.verify_token=token
         $client = static::createClient();
 
         $client->request('GET',
@@ -52,13 +52,13 @@ class FacebookMessengerControllerTest extends WebTestCase
             [
                 'hub.mode' => 'subscribe',
                 'hub.verify_token' => 'token',
-                'hub.challenge' => 382059564
+                'hub.challenge' => 1494994378
             ]
         );
 
         $result = json_decode($client->getResponse()->getContent());
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $this->assertEquals(382059564, $result);
+        $this->assertEquals(1494994378, $result);
     }
 
 }
