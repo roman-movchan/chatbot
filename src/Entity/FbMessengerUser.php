@@ -29,7 +29,20 @@ class FbMessengerUser
     /**
      * @ORM\Column(type="string", length=100)
      */
-    private $secondName;
+    private $lastName;
+
+    /**
+     * FbMessengerUser constructor.
+     * @param integer $messengerId
+     * @param string $firstName
+     * @param string $lastName
+     */
+    public function __construct($messengerId, $firstName, $lastName)
+    {
+        $this->messengerId = $messengerId;
+        $this->firstName = $firstName;
+        $this->lastName = $lastName;
+    }
 
     /**
      * @return mixed
@@ -78,18 +91,18 @@ class FbMessengerUser
     /**
      * @return mixed
      */
-    public function getSecondName()
+    public function getLastName()
     {
-        return $this->secondName;
+        return $this->lastName;
     }
 
     /**
-     * @param mixed $secondName
+     * @param mixed $lastName
      * @return FbMessengerUser
      */
-    public function setSecondName($secondName)
+    public function setSecondName($lastName)
     {
-        $this->secondName = $secondName;
+        $this->lastName = $lastName;
         return $this;
     }
 

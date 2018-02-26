@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\FbMessengerUser;
 use pimax\UserProfile;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
@@ -41,16 +42,13 @@ class FacebookMessengerController extends Controller
             return new Response((string)$request->query->get('hub_challenge'));
         }
 
-        $data = json_decode(file_get_contents("php://input"), true);
-        if (!empty($data['entry'][0]['messaging']))
-        {
-            foreach ($data['entry'][0]['messaging'] as $message)
-            {
-                // Skipping delivery messages
+        $data = json_decode($request->getContent(), true);
+        if (!empty($data['entry'][0]['messaging'])) {
+            foreach ($data['entry'][0]['messaging'] as $message) {
                 if (!empty($message['delivery'])) {
                     continue;
                 }
-//                    // skip the echo of my own messages
+
                 if (isset($message['message']['is_echo']) && ($message['message']['is_echo'] == "true")) {
                     continue;
                 }
@@ -63,7 +61,27 @@ class FacebookMessengerController extends Controller
                     $command = $message['postback']['payload'];
                 }
 
-// Обрабатываем команду
+                $senderUser =  $this->getDoctrine()
+                    ->getRepository(FbMessengerUser::class)
+                    ->findOneBy(['messengerId' => $message['sender']['id']]);
+
+                $em = $this->getDoctrine()->getManager();
+
+                if(!$senderUser) {
+                    /** @var UserProfile $userProfile */
+                    $userProfile = $bot->userProfile($message['sender']['id']);
+                    try {
+                        $firstName = $userProfile->getFirstName() ? $userProfile->getFirstName() : '';
+                        $lastName = $userProfile->getLastName() ? $userProfile->getLastName() : '';
+                    } catch (\Exception $e) {
+                        $firstName = '';
+                        $lastName = '';
+                    }
+                    $senderUser = new FbMessengerUser($message['sender']['id'], $firstName, $lastName);
+
+                    $em->persist($senderUser);
+                }
+
                 switch ($command) {
 
                     // When bot receive "text"
@@ -163,12 +181,13 @@ class FacebookMessengerController extends Controller
                     // Other message received
                     default:
                         /** @var UserProfile $user */
-                        $user = $bot->userProfile($message['sender']['id']);
-                        $bot->send(new Message($message['sender']['id'], 'Sorry. I don’t understand you.'. $user->getFirstName()));
+                        $bot->send(new Message($message['sender']['id'], 'Sorry. I don’t understand you. '. $senderUser->getFirstName()));
                 }
 
+                $em->flush();
             }
         }
+
 
         return new Response();
 
