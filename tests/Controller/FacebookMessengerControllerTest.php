@@ -56,7 +56,7 @@ class FacebookMessengerControllerTest extends WebTestCase
             ]
         );
 
-        $result = json_decode($client->getResponse()->getContent());
+        $result = $client->getResponse()->getContent();
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $this->assertEquals(1494994378, $result);
     }
