@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\FbMessengerMessage;
 use App\Entity\FbMessengerUser;
 use pimax\UserProfile;
+use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -30,7 +31,7 @@ class FacebookMessengerController extends Controller
      * @param Request $request
      * @return Response
      */
-    public function fbMessageAction(Request $request) : Response
+    public function fbMessageAction(Request $request, LoggerInterface $logger) : Response
     {
         $verify_token = "token"; // Verify token
         $token = "EAAFWxeSIONMBABATvkfn4XYbVA8PMKdix16CVvB0fuPLxZA8rbAMZAc2bATEVqnYvF15f5ujBo5roOJRWVTAn56iofZCCH20cJMRF82RwNNkbSIYtzMF4tKFZCipjdbhhTPltqe3kI0IeNL3YlZBNRH01KvW3V7M5RQ5IlspV0fxXS9ZCer9l6"; // Page token
@@ -55,6 +56,10 @@ class FacebookMessengerController extends Controller
                 }
 
                 $command = "";
+                $logger->critical('I left the oven on!', array(
+                    // include extra "context" info in your logs
+                    $message,
+                ));
                 if (!empty($message['message'])) {
                     $command = $message['message']['text'];
                     // ИЛИ Зафиксирован переход по кнопке, записываем как команду
