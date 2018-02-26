@@ -23,7 +23,7 @@ class FacebookMessengerController extends Controller
 
     /**
      * @Route("/fbbot", name="fbbot")
-     * @Method("POST")
+     * @Method({"POST", "GET"})
      *
      * @param Request $request
      * @return Response
