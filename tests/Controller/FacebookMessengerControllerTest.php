@@ -19,10 +19,15 @@ class FacebookMessengerControllerTest extends WebTestCase
                     'messaging' => [
                         (object) [
                             'sender' => (object)[
-                                'id' => 111111
+                                'id' => 100005910641051
                             ],
                             'recipient' => (object) [
-                                'id' => 222222
+                                'id' => 376882919389395
+                            ],
+                            "timestamp" => 1458692752478,
+                            'message' => (object)[
+                                "mid" => "mid.1457764197618:41d102a3e1ae206a38",
+                                "text" => "hello, world!",
                             ]
                         ]
                     ]
