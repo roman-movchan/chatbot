@@ -35,10 +35,10 @@ class FacebookMessengerController extends Controller
 
         $bot = new FbBotApp($token);
 
-        if ($request->request->has('hub_mode')
-            && $request->request->get('hub_mode') === 'subscribe'
-            && $request->request->get('hub_verify_token') == $verify_token) {
-            return new Response((string)$request->request->get('hub_challenge'));
+        if ($request->query->has('hub.mode')
+            && $request->query->get('hub.mode') === 'subscribe'
+            && $request->query->get('hub.verify_token') == $verify_token) {
+            return new Response((string)$request->query->get('hub.challenge'));
         }
 
         $data = json_decode(file_get_contents("php://input"), true);
