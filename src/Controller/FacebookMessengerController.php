@@ -56,7 +56,6 @@ class FacebookMessengerController extends Controller
 
         $data = json_decode($request->getContent(), true);
 
-
         $logger->info('request', [$data]);
 
         if (!empty($data['entry'][0]['messaging'])) {
@@ -70,7 +69,10 @@ class FacebookMessengerController extends Controller
                         continue;
                     }
 
-                    $command = "";
+                    $previousMessage = $this->getDoctrine()->getRepository(FbMessengerMessage::class)
+                        ->findOneBy(['senderId' => $message['recipient']['id']], ['created' => 'DESC']);
+
+                    $command = $previousMessage ? $previousMessage->getType() : 'welcome';
 
                     if (!empty($message['message'])) {
                         $command = $message['message']['text'];
@@ -141,14 +143,14 @@ class FacebookMessengerController extends Controller
                             break;
 
                         default:
-                            /** @var UserProfile $user */
-                            $bot->send(new Message($message['sender']['id'], 'Sorry. I don’t understand you. '. $senderUser->getFirstName()));
+                            $bot->send(new Message($message['sender']['id'], 'Sorry. I don’t understand you. '. $user->getFirstName()));
                     }
                 } catch (\Exception $e) {
-                    $logger->critical('Bad message', array(
+                    $logger->critical($e->getMessage(), array(
                         $message,
                     ));
                     $bot->send(new Message($message['sender']['id'], 'Some error happened.'));
+
                 }
 
             }
