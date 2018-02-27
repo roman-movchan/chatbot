@@ -112,7 +112,6 @@ class FacebookMessengerControllerTest extends WebTestCase
 
     //[{"recipient":{"id":"155365675175754"},"timestamp":1519684168995,"sender":{"id":"1920030624688511"},"postback":{"payload":"First button","title":"First button"}}]
 
-    // [{"recipient":{"id":"155365675175754"},"timestamp":1519726124703,"sender":{"id":"1920030624688511"},"postback":{"payload":"some get started","title":null}}] []
 
 
 }

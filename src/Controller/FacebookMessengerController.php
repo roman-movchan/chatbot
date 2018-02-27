@@ -36,6 +36,7 @@ class FacebookMessengerController extends Controller
      * @Method({"POST", "GET"})
      *
      * @param Request $request
+     * @param LoggerInterface $logger
      * @return Response
      */
     public function fbMessageAction(Request $request, LoggerInterface $logger) : Response
@@ -50,8 +51,15 @@ class FacebookMessengerController extends Controller
             && $request->query->get('hub_verify_token') == $verify_token) {
             return new Response((string)$request->query->get('hub_challenge'));
         }
+
         $em = $this->getDoctrine()->getManager();
+
         $data = json_decode($request->getContent(), true);
+
+
+        $loggerRequests = $this->get('monolog.logger.req');
+        $loggerRequests->info('request', [$data]);
+
         if (!empty($data['entry'][0]['messaging'])) {
             foreach ($data['entry'][0]['messaging'] as $message) {
                 try {
@@ -67,28 +75,19 @@ class FacebookMessengerController extends Controller
 
                     if (!empty($message['message'])) {
                         $command = $message['message']['text'];
-                        // ИЛИ Зафиксирован переход по кнопке, записываем как команду
                     } else if (!empty($message['postback'])) {
                         $command = $message['postback']['payload'];
                     }
 
-                    $senderUser =  $this->getDoctrine()
+                    $user =  $this->getDoctrine()
                         ->getRepository(FbMessengerUser::class)
                         ->findOneBy(['messengerId' => $message['sender']['id']]);
 
-                    if(!$senderUser) {
+                    if(!$user) {
                         /** @var UserProfile $userProfile */
                         $userProfile = $bot->userProfile($message['sender']['id']);
-                        try {
-                            $firstName = $userProfile->getFirstName() ? $userProfile->getFirstName() : '';
-                            $lastName = $userProfile->getLastName() ? $userProfile->getLastName() : '';
-                        } catch (\Exception $e) {
-                            $firstName = '';
-                            $lastName = '';
-                        }
-                        $senderUser = new FbMessengerUser($message['sender']['id'], $firstName, $lastName);
-
-                        $em->persist($senderUser);
+                        $user = new FbMessengerUser($message['sender']['id'], $userProfile->getFirstName() , $userProfile->getLastName() );
+                        $em->persist($user);
                     }
 
                     $msg = new FbMessengerMessage();
@@ -105,7 +104,6 @@ class FacebookMessengerController extends Controller
 
                     switch ($command) {
 
-                        // When bot receive "text"
                         case 'text':
                             $bot->send(new Message($message['sender']['id'], 'This is a simple text message.'));
                             break;
@@ -113,7 +111,7 @@ class FacebookMessengerController extends Controller
                         case 'welcome':
                             $bot->send(new Message($message['sender']['id'], 'Hi, this is credit chatbot. Write the desired amount of credit'));
                             break;
-                        // When bot receive "button"
+
                         case 'button':
                             $bot->send(new StructuredMessage($message['sender']['id'],
                                 StructuredMessage::TYPE_BUTTON,
@@ -141,32 +139,6 @@ class FacebookMessengerController extends Controller
                                     new QuickReplyButton(QuickReplyButton::TYPE_TEXT, 'QR button','PAYLOAD')
                                 ]
                             ));
-                            break;
-
-                        case 'generic':
-
-                            $bot->send(new StructuredMessage($message['sender']['id'],
-                                StructuredMessage::TYPE_GENERIC,
-                                [
-                                    'elements' => [
-                                        new MessageElement("First item", "Item description", "", [
-                                            new MessageButton(MessageButton::TYPE_POSTBACK, 'First button'),
-                                            new MessageButton(MessageButton::TYPE_WEB, 'Web link', 'http://facebook.com')
-                                        ]),
-
-                                        new MessageElement("Second item", "Item description", "", [
-                                            new MessageButton(MessageButton::TYPE_POSTBACK, 'First button'),
-                                            new MessageButton(MessageButton::TYPE_POSTBACK, 'Second button')
-                                        ]),
-
-                                        new MessageElement("Third item", "Item description", "", [
-                                            new MessageButton(MessageButton::TYPE_POSTBACK, 'First button'),
-                                            new MessageButton(MessageButton::TYPE_POSTBACK, 'Second button')
-                                        ])
-                                    ]
-                                ]
-                            ));
-
                             break;
 
                         default:

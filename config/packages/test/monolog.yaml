@@ -1,5 +1,12 @@
 monolog:
+    channels: ['req']
     handlers:
+        req:
+            # log all messages (since debug is the lowest level)
+            level:    debug
+            type:     stream
+            path:     '%kernel.logs_dir%/req.log'
+            channels: [req]
         main:
             type: stream
             path: "%kernel.logs_dir%/%kernel.environment%.log"

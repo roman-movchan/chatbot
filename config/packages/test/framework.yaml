@@ -2,3 +2,7 @@ framework:
     test: true
     session:
         storage_id: session.storage.mock_file
+
+doctrine:
+    dbal:
+        url: '%env(resolve:DATABASE_URL)%_test'
