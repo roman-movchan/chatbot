@@ -16,10 +16,6 @@ use pimax\Messages\Message;
 use pimax\Messages\MessageButton;
 use pimax\Messages\StructuredMessage;
 use pimax\Messages\MessageElement;
-use pimax\Messages\MessageReceiptElement;
-use pimax\Messages\Address;
-use pimax\Messages\Summary;
-use pimax\Messages\Adjustment;
 
 class FacebookMessengerController extends Controller
 {
@@ -117,6 +113,21 @@ class FacebookMessengerController extends Controller
                                         new MessageButton(MessageButton::TYPE_POSTBACK, 'Second button'),
                                         new MessageButton(MessageButton::TYPE_POSTBACK, 'Third button')
                                     ]
+                                ]
+                            ));
+                            break;
+
+                        case 'profile':
+                            $user = $bot->userProfile($message['sender']['id']);
+                            $bot->send(new StructuredMessage($message['sender']['id'],
+                                StructuredMessage::TYPE_GENERIC,
+                                [
+                                    'elements' => [
+                                        new MessageElement($user->getFirstName()." ".$user->getLastName(), " ", $user->getPicture())
+                                    ]
+                                ],
+                                [
+                                    new QuickReplyButton(QuickReplyButton::TYPE_TEXT, 'QR button','PAYLOAD')
                                 ]
                             ));
                             break;
