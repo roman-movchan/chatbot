@@ -99,6 +99,9 @@ class FacebookMessengerController extends Controller
                             $bot->send(new Message($message['sender']['id'], 'This is a simple text message.'));
                             break;
 
+                        case 'welcome':
+                            $bot->send(new Message($message['sender']['id'], 'Hi, this is credit chatbot. Write the desired amount of credit'));
+                            break;
                         // When bot receive "button"
                         case 'button':
                             $bot->send(new StructuredMessage($message['sender']['id'],
@@ -114,7 +117,6 @@ class FacebookMessengerController extends Controller
                             ));
                             break;
 
-                        // When bot receive "generic"
                         case 'generic':
 
                             $bot->send(new StructuredMessage($message['sender']['id'],
@@ -141,7 +143,6 @@ class FacebookMessengerController extends Controller
 
                             break;
 
-                        // Other message received
                         default:
                             /** @var UserProfile $user */
                             $bot->send(new Message($message['sender']['id'], 'Sorry. I don’t understand you. '. $senderUser->getFirstName()));
