@@ -88,7 +88,9 @@ class FacebookMessengerController extends Controller
                     $msg->setType('text');
                     $msg->setSenderId($message['sender']['id']);
                     $msg->setRecipientId($message['recipient']['id']);
-                    $msg->setText($message['message']['text']);
+                    if(isset($message['message']['text'])) {
+                        $msg->setText($message['message']['text']);
+                    }
 
                     $em->persist($msg);
 

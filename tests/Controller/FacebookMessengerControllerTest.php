@@ -67,7 +67,7 @@ class FacebookMessengerControllerTest extends WebTestCase
                             ],
                             "timestamp" => 1458692752478,
                             'postback' => (object)[
-                                "payload" => "some get started",
+                                "payload" => "welcome",
                                 "title" => "null",
                             ]
                         ]
