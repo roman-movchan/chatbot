@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "82be670c8cd4b0a450e88c8e7db61f71",
+    "content-hash": "9c434caa92bded653efec396f82eb2e5",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -1208,16 +1208,16 @@
         },
         {
             "name": "pimax/fb-messenger-php",
-            "version": "v1.0",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pimax/fb-messenger-php.git",
-                "reference": "9b2d3a4aa9c48ca661ec5566a5b044ecd2e6405d"
+                "reference": "5efa26831bfed3d6429b8d2b057251c1e3d8e4da"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pimax/fb-messenger-php/zipball/9b2d3a4aa9c48ca661ec5566a5b044ecd2e6405d",
-                "reference": "9b2d3a4aa9c48ca661ec5566a5b044ecd2e6405d",
+                "url": "https://api.github.com/repos/pimax/fb-messenger-php/zipball/5efa26831bfed3d6429b8d2b057251c1e3d8e4da",
+                "reference": "5efa26831bfed3d6429b8d2b057251c1e3d8e4da",
                 "shasum": ""
             },
             "require": {
@@ -1243,7 +1243,7 @@
             ],
             "description": " Facebook Messenger Bot PHP API",
             "homepage": "https://github.com/pimax/fb-messenger-php",
-            "time": "2016-04-20T20:40:27+00:00"
+            "time": "2018-02-25T09:58:13+00:00"
         },
         {
             "name": "psr/cache",
@@ -3984,7 +3984,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "pimax/fb-messenger-php": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

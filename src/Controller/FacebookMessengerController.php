@@ -12,10 +12,21 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Routing\Annotation\Route;
 use pimax\FbBotApp;
+use pimax\Menu\MenuItem;
+use pimax\Menu\LocalizedMenu;
 use pimax\Messages\Message;
 use pimax\Messages\MessageButton;
 use pimax\Messages\StructuredMessage;
 use pimax\Messages\MessageElement;
+use pimax\Messages\MessageReceiptElement;
+use pimax\Messages\Address;
+use pimax\Messages\Summary;
+use pimax\Messages\Adjustment;
+use pimax\Messages\AccountLink;
+use pimax\Messages\ImageMessage;
+use pimax\Messages\QuickReply;
+use pimax\Messages\QuickReplyButton;
+use pimax\Messages\SenderAction;
 
 class FacebookMessengerController extends Controller
 {
