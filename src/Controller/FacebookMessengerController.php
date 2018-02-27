@@ -57,8 +57,7 @@ class FacebookMessengerController extends Controller
         $data = json_decode($request->getContent(), true);
 
 
-        $loggerRequests = $this->get('monolog.logger.req');
-        $loggerRequests->info('request', [$data]);
+        $logger->info('request', [$data]);
 
         if (!empty($data['entry'][0]['messaging'])) {
             foreach ($data['entry'][0]['messaging'] as $message) {
