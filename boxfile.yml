@@ -1,0 +1,92 @@
+run.config:
+  # install php and associated runtimes
+  engine: php
+
+  # php engine configuration (php version, extensions, etc)
+  engine.config:
+
+    # sets the php version to 7.1
+    runtime: php-7.2
+
+    # use nginx
+    webserver: nginx
+
+    # public directory
+    document_root: public
+
+    nginx_document_root: public
+
+    # index
+    nginx_default_gateway: index.php
+
+    # enables php extensions
+    extensions:
+      - apcu
+      - ctype
+      - dom
+      - iconv
+      - intl
+      - mbstring
+      - pdo
+      - pdo_mysql
+      - session
+      - simplexml
+      - tokenizer
+      - xml
+      - zlib
+      - curl
+      - fileinfo
+      - gd
+      - gettext
+      - imagick
+      - json
+      - memcached
+      - mbstring
+      - mcrypt
+      - mongodb
+      - pcntl
+      - redis
+      - soap
+      - sockets
+      - sqlite3
+      - opcache
+      - zip
+    zend_extensions:
+      - opcache
+#
+deploy.config:
+  before_live:
+    web.main:
+      - bin/console doctrine:schema:update --force
+
+# add a MySQL database
+data.db:
+  image: nanobox/mysql:5.7
+
+# add a Storage backend
+data.storage:
+  image: nanobox/unfs:0.9
+
+# add a Redis backend
+data.redis :
+  image : nanobox/redis:3.2
+
+# add a Memcached backend
+data.memcached:
+  image: nanobox/memcached:1.4
+
+# add a Mongodb Backend
+data.mongodb:
+  image: nanobox/mongodb:3.0
+
+# WEB RUNNER
+web.main:
+  start: php-server
+
+  # add writable dirs to your web component
+  writable_dirs:
+    - var
+
+  # the path to a logfile you want streamed to the nanobox dashboard
+  log_watch:
+    symfony[error]: /app/storage/logs/symfony.log
