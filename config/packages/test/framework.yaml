@@ -5,4 +5,4 @@ framework:
 
 doctrine:
     dbal:
-        url: '%env(resolve:DATABASE_URL)%_test'
+        url: '%env(resolve:DATA_DB_DRIVER)%://%env(resolve:DATA_DB_USER)%:%env(resolve:DATA_DB_PASS)%@%env(resolve:DATA_DB_HOST)%:3306/%env(resolve:DATA_DB_DATABASE)%_test'

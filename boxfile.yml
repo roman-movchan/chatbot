@@ -5,8 +5,10 @@ run.config:
   # php engine configuration (php version, extensions, etc)
   engine.config:
 
-    # sets the php version to 7.1
+    # sets the php version to 7.2
     runtime: php-7.2
+
+    php_fpm_events_mechanism: 'epoll'
 
     # use nginx
     webserver: nginx
