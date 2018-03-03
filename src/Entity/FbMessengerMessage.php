@@ -43,6 +43,11 @@ class FbMessengerMessage
     private $text;
 
     /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $value;
+
+    /**
      *
      * @ORM\PrePersist
      * @ORM\PreUpdate
@@ -151,6 +156,26 @@ class FbMessengerMessage
         $this->created = $created;
         return $this;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getValue()
+    {
+        return $this->value;
+    }
+
+    /**
+     * @param mixed $value
+     * @return FbMessengerMessage
+     */
+    public function setValue($value)
+    {
+        $this->value = $value;
+        return $this;
+    }
+
+
 
 
 

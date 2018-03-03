@@ -74,11 +74,11 @@ class FacebookMessengerController extends Controller
 
                     $command = $previousMessage ? $previousMessage->getType() : 'welcome';
 
-                    if (!empty($message['message'])) {
-                        $command = $message['message']['text'];
-                    } else if (!empty($message['postback'])) {
-                        $command = $message['postback']['payload'];
-                    }
+//                    if (!empty($message['message'])) {
+//                        $command = $message['message']['text'];
+//                    } else if (!empty($message['postback'])) {
+//                        $command = $message['postback']['payload'];
+//                    }
 
                     $user =  $this->getDoctrine()
                         ->getRepository(FbMessengerUser::class)
@@ -111,36 +111,54 @@ class FacebookMessengerController extends Controller
 
                         case 'welcome':
                             $bot->send(new Message($message['sender']['id'], 'Hi, this is credit chatbot. Write the desired amount of credit'));
+                            $sentMessage = new FbMessengerMessage();
+                            $sentMessage->setType('amount');
+                            $sentMessage->setText('Hi, this is credit chatbot. Write the desired amount of credit');
+                            $sentMessage->setSenderId($message['recipient']['id']); //from chatbot
+                            $sentMessage->setRecipientId($message['sender']['id']); //user
+                            $em->persist($sentMessage);
                             break;
-
-                        case 'button':
-                            $bot->send(new StructuredMessage($message['sender']['id'],
-                                StructuredMessage::TYPE_BUTTON,
-                                [
-                                    'text' => 'Choose category',
-                                    'buttons' => [
-                                        new MessageButton(MessageButton::TYPE_POSTBACK, 'First button'),
-                                        new MessageButton(MessageButton::TYPE_POSTBACK, 'Second button'),
-                                        new MessageButton(MessageButton::TYPE_POSTBACK, 'Third button')
+                        case 'amount':
+                            if((int)$message['message']['text'] > 0) {
+                                $bot->send(new Message($message['sender']['id'], 'And now choose your employment'));
+                                $bot->send(new StructuredMessage($message['sender']['id'],
+                                    StructuredMessage::TYPE_BUTTON,
+                                    [
+                                        'text' => 'And now choose your employment',
+                                        'buttons' => [
+                                            new MessageButton(MessageButton::TYPE_POSTBACK, 'Official'),
+                                            new MessageButton(MessageButton::TYPE_POSTBACK, 'Private'),
+                                            new MessageButton(MessageButton::TYPE_POSTBACK, 'Pensioner')
+                                            //TODO: add more
+                                        ]
                                     ]
-                                ]
-                            ));
-                            break;
+                                ));
 
-                        case 'profile':
-                            $user = $bot->userProfile($message['sender']['id']);
-                            $bot->send(new StructuredMessage($message['sender']['id'],
-                                StructuredMessage::TYPE_GENERIC,
-                                [
-                                    'elements' => [
-                                        new MessageElement($user->getFirstName()." ".$user->getLastName(), " ", $user->getPicture())
-                                    ]
-                                ],
-                                [
-                                    new QuickReplyButton(QuickReplyButton::TYPE_TEXT, 'QR button','PAYLOAD')
-                                ]
-                            ));
+                                $sentMessage = new FbMessengerMessage();
+                                $sentMessage->setType('employment');
+                                $sentMessage->setText('And now choose your employment');
+                                $sentMessage->setSenderId($message['recipient']['id']);
+                                $sentMessage->setRecipientId($message['sender']['id']);
+                                $em->persist($sentMessage);
+                            } else {
+                                $bot->send(new Message($message['sender']['id'], 'Amount must be more than 0. Write right amount'));
+                            }
+
                             break;
+//                        case 'profile':
+//                            $user = $bot->userProfile($message['sender']['id']);
+//                            $bot->send(new StructuredMessage($message['sender']['id'],
+//                                StructuredMessage::TYPE_GENERIC,
+//                                [
+//                                    'elements' => [
+//                                        new MessageElement($user->getFirstName()." ".$user->getLastName(), " ", $user->getPicture())
+//                                    ]
+//                                ],
+//                                [
+//                                    new QuickReplyButton(QuickReplyButton::TYPE_TEXT, 'QR button','PAYLOAD')
+//                                ]
+//                            ));
+//                            break;
 
                         default:
                             $bot->send(new Message($message['sender']['id'], 'Sorry. I don’t understand you. '. $user->getFirstName()));
