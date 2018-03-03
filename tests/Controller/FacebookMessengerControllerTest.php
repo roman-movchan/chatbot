@@ -3,91 +3,10 @@
 namespace App\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class FacebookMessengerControllerTest extends WebTestCase
 {
-    public function testControllerSuccess()
-    {
-        $client = static::createClient();
-
-        $message = (object) [
-            'object' => "page",
-            'entry' => [
-                (object) [
-                    'id' => 376882919389395,
-                    'time' => 1458692752478,
-                    'messaging' => [
-                        (object) [
-                            'sender' => (object)[
-                                'id' => 100005910641051
-                            ],
-                            'recipient' => (object) [
-                                'id' => 376882919389395
-                            ],
-                            "timestamp" => 1458692752478,
-                            'message' => (object)[
-                                "mid" => "mid.1457764197618:41d102a3e1ae206a38",
-                                "text" => "hello, world!",
-                            ]
-                        ]
-                    ]
-                ]
-            ]
-        ];
-
-        $client->request('POST',
-            $client->getContainer()->get('router')->generate('fbbot'),
-            [],
-            [],
-            ['CONTENT_TYPE' => 'application/json'],
-            json_encode($message)
-        );
-
-        json_decode($client->getResponse()->getContent());
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
-    }
-
-    public function testWelcomeMessageSuccess()
-    {
-        $client = static::createClient();
-
-        $message = (object) [
-            'object' => "page",
-            'entry' => [
-                (object) [
-                    'id' => 376882919389395,
-                    'time' => 1458692752478,
-                    'messaging' => [
-                        (object) [
-                            'sender' => (object)[
-                                'id' => 100005910641051
-                            ],
-                            'recipient' => (object) [
-                                'id' => 376882919389395
-                            ],
-                            "timestamp" => 1458692752478,
-                            'postback' => (object)[
-                                "payload" => "welcome",
-                                "title" => "null",
-                            ]
-                        ]
-                    ]
-                ]
-            ]
-        ];
-
-        $client->request('POST',
-            $client->getContainer()->get('router')->generate('fbbot'),
-            [],
-            [],
-            ['CONTENT_TYPE' => 'application/json'],
-            json_encode($message)
-        );
-
-        json_decode($client->getResponse()->getContent());
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
-    }
-
     public function testControllerVerify()
     {
         //fbbot?hub.mode=subscribe&hub.challenge=1494994378&hub.verify_token=token
@@ -107,10 +26,38 @@ class FacebookMessengerControllerTest extends WebTestCase
         $this->assertEquals(1494994378, $result);
     }
 
-    //todo: test for
-    //{"sender":{"id":"1920030624688511"},"recipient":{"id":"155365675175754"},"timestamp":1519676310083,"message":{"tags":{"source":"customer_chat_plugin"},"mid":"mid.$cAADXuZMmdtFoBQmKQ1h08RBO4nN3","seq":499118,"sticker_id":369239263222822,"attachments":[{"type":"image","payload":{"url":"https://scontent-dft4-2.xx.fbcdn.net/v/t39.1997-6/851557_369239266556155_759568595_n.png?_nc_ad=z-m&_nc_cid=0&oh=557fb26a3950519bda159df1f43bd7b5&oe=5B1451DC","sticker_id":369239263222822}}]}}]
+    /**
+     * @dataProvider getRequests
+     */
+    public function testRequests($requestString)
+    {
+        $message = json_decode($requestString);
 
-    //[{"recipient":{"id":"155365675175754"},"timestamp":1519684168995,"sender":{"id":"1920030624688511"},"postback":{"payload":"First button","title":"First button"}}]
+        $client = static::createClient();
+
+        $client->request('GET',
+            $client->getContainer()->get('router')->generate('fbbot'),
+            [],
+            [],
+            ['CONTENT_TYPE' => 'application/json'],
+            json_encode($message)
+        );
+
+        $result = $client->getResponse()->getContent();
+        $this->assertEquals(JsonResponse::HTTP_OK, $client->getResponse()->getStatusCode());
+    }
+
+    public function getRequests()
+    {
+        yield ['{"object":"page","entry":[{"id":"155365675175754","time":1519747902081,"messaging":[{"sender":{"id":"1920030624688511"},"recipient":{"id":"155365675175754"},"timestamp":1519747902068,"delivery":{"mids":["mid.$cAADXuZMmdtFoCU3w-Fh2AioO-626"],"watermark":1519747901688,"seq":0}}]}]}'];
+        yield ['{"object":"page","entry":[{"id":"155365675175754","time":1519747912994,"messaging":[{"sender":{"id":"1920030624688511"},"recipient":{"id":"155365675175754"},"timestamp":1519747912846,"message":{"tags":{"source":"customer_chat_plugin"},"mid":"mid.$cAADXuZMmdtFoCU4cjlh2AjUBM2Xp","seq":499368,"text":"text"}}]}]}'];
+        yield ['{"object":"page","entry":[{"id":"155365675175754","time":1519747914350,"messaging":[{"sender":{"id":"1920030624688511"},"recipient":{"id":"155365675175754"},"timestamp":1519747914336,"delivery":{"mids":["mid.$cAADXuZMmdtFoCU4hLFh2AjYc0xJp"],"watermark":1519747914028,"seq":0}}]}]}'];
+        yield ['{"object":"page","entry":[{"id":"155365675175754","time":1519747940915,"messaging":[{"sender":{"id":"1920030624688511"},"recipient":{"id":"155365675175754"},"timestamp":1519747940767,"message":{"tags":{"source":"customer_chat_plugin"},"mid":"mid.$cAADXuZMmdtFoCU6Jn1h2AlArVJt2","seq":499370,"text":"welcome"}}]}]}'];
+        yield ['{"object":"page","entry":[{"id":"155365675175754","time":1519747942272,"messaging":[{"sender":{"id":"1920030624688511"},"recipient":{"id":"155365675175754"},"timestamp":1519747942255,"delivery":{"mids":["mid.$cAADXuZMmdtFoCU6OfFh2AlFeC7BQ"],"watermark":1519747942012,"seq":0}}]}]}'];
+        yield ['{"object":"page","entry":[{"id":"155365675175754","time":1519747947553,"messaging":[{"sender":{"id":"1920030624688511"},"recipient":{"id":"155365675175754"},"timestamp":1519747947402,"message":{"tags":{"source":"customer_chat_plugin"},"mid":"mid.$cAADXuZMmdtFoCU6jilh2Ala6aTrA","seq":499374,"text":"button"}}]}]}'];
+
+    }
+
 
 
 
